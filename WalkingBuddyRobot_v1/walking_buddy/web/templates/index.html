@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ app_name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <main class="container">
+        <h1>{{ app_name }}</h1>
+        <p class="subtitle">Safe control panel for the first Walking Buddy robot prototype.</p>
+
+        <section class="card">
+            <h2>Robot Controls</h2>
+            <div class="grid">
+                <button onclick="moveRobot('forward')">Forward</button>
+                <button onclick="moveRobot('left')">Left</button>
+                <button onclick="moveRobot('stop')" class="stop">Stop</button>
+                <button onclick="moveRobot('right')">Right</button>
+                <button onclick="moveRobot('backward')">Backward</button>
+            </div>
+            <p id="status">Ready.</p>
+        </section>
+
+        <section class="card">
+            <h2>Camera Feed</h2>
+            <img src="/video" class="video" alt="Walking Buddy camera feed">
+        </section>
+
+        <section class="card">
+            <h2>Voice Test</h2>
+            <button onclick="sayHello()">Say Hello</button>
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
