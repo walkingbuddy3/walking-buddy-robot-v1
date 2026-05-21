@@ -1,6 +1,7 @@
 from time import sleep
 from walking_buddy import config
 
+
 class MotorController:
     def __init__(self):
         self.safe_mode = config.SAFE_MODE
@@ -11,8 +12,6 @@ class MotorController:
             self._setup_gpio()
 
     def _setup_gpio(self):
-        # Hardware mode will be completed after we confirm the exact motor controller.
-        # This prevents accidental wheel movement before wiring is verified.
         raise NotImplementedError(
             "Hardware GPIO mode is not enabled yet. Keep SAFE_MODE=True until wiring is confirmed."
         )
@@ -29,22 +28,36 @@ class MotorController:
             "backward": self.backward,
             "left": self.left,
             "right": self.right,
-            "stop": self.stop
+            "stop": self.stop,
         }
 
         if command not in allowed:
             return {
                 "ok": False,
                 "error": f"Unknown command: {command}",
-                "allowed": list(allowed.keys())
+                "allowed": list(allowed.keys()),
+            }
+
+        from walking_buddy.services.obstacles import ObstacleService
+
+        obstacle = ObstacleService()
+        status = obstacle.get_status()
+
+        if not status["safe"] and command == "forward":
+            self.stop()
+
+            return {
+                "ok": False,
+                "message": "Obstacle detected. Movement blocked.",
             }
 
         allowed[command](seconds=seconds)
+
         return {
             "ok": True,
             "command": command,
             "seconds": seconds,
-            "mode": self.mode
+            "mode": self.mode,
         }
 
     def forward(self, seconds=0.5):
@@ -73,5 +86,4 @@ class MotorController:
             if seconds:
                 sleep(seconds)
         else:
-            # Real motor commands will go here after hardware arrives.
             pass
