@@ -22,3 +22,16 @@ async function sayHello() {
     const data = await response.json();
     document.getElementById("status").innerText = JSON.stringify(data);
 }
+
+async function emergencyStop() {
+    const status = document.getElementById("status");
+    status.innerText = "EMERGENCY STOP sending...";
+
+    const response = await fetch("/api/emergency-stop", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"}
+    });
+
+    const data = await response.json();
+    status.innerText = JSON.stringify(data);
+}

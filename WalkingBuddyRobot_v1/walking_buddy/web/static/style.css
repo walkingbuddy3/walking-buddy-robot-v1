@@ -58,3 +58,10 @@ button.stop {
     border-radius: 12px;
     background: #111;
 }
+
+button.emergency {
+    background: #8b0000;
+    grid-column: 1 / -1;
+    font-weight: bold;
+    font-size: 20px;
+}
