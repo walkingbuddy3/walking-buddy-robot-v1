@@ -35,3 +35,19 @@ async function emergencyStop() {
     const data = await response.json();
     status.innerText = JSON.stringify(data);
 }
+
+
+async function captureCamera() {
+    const status = document.getElementById("status");
+    status.innerText = "Capturing image...";
+
+    const response = await fetch("/api/camera/capture", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"}
+    });
+
+    const data = await response.json();
+    status.innerText = JSON.stringify(data);
+}
+
+

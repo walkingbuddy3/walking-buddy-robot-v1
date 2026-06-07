@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request, Response
+import subprocess
 from walking_buddy.config import APP_NAME
 from walking_buddy.hardware.motors import MotorController
 from walking_buddy.services.camera import CameraService
@@ -72,5 +73,27 @@ def create_app():
             camera_service.generate_frames(),
             mimetype="multipart/x-mixed-replace; boundary=frame"
         )
+    @app.route("/api/camera/capture", methods=["POST"])
+    def capture_camera():
+        output_file = "/home/walkingbuddy3/camera-tests/latest.jpg"
 
+        result = subprocess.run(
+            ["rpicam-still", "-o", output_file, "--nopreview"],
+            capture_output=True,
+            text=True
+        )
+
+        if result.returncode != 0:
+            return jsonify({
+                "ok": False,
+                "message": "Camera capture failed",
+                "error": result.stderr
+            }), 500
+
+        return jsonify({
+            "ok": True,
+            "message": "Camera image captured",
+            "file": output_file
+        })
     return app
+
