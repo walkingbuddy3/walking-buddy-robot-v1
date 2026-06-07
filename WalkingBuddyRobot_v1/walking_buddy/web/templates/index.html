@@ -18,9 +18,6 @@
                 <button onclick="moveRobot('left')">Left</button>
                 <button onclick="moveRobot('stop')" class="stop">Stop</button>
                 <button onclick="emergencyStop()" class="emergency">EMERGENCY STOP</button>
-                <button onclick="moveRobot('right')">Right</button>
-                <button onclick="moveRobot('stop')" class="stop">Stop</button>
-                <button onclick="emergencyStop()" class="emergency">EMERGENCY STOP</button>
                 <button onclick="captureCamera()">Capture Camera</button>
                 <button onclick="moveRobot('right')">Right</button>
                 <button onclick="moveRobot('backward')">Backward</button>
@@ -30,7 +27,10 @@
 
         <section class="card">
             <h2>Camera Feed</h2>
-            <img src="/video" class="video" alt="Walking Buddy camera feed">
+            <img id="latest-camera-image"
+     src="/api/camera/latest"
+     class="video"
+     alt="Latest Walking Buddy camera capture">
         </section>
 
         <section class="card">

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, Response
+from flask import Flask, jsonify, request, render_template, Response, send_file
 import subprocess
 from walking_buddy.config import APP_NAME
 from walking_buddy.hardware.motors import MotorController
@@ -66,13 +66,18 @@ def create_app():
         message = data.get("message", "Hello, I am Walking Buddy.")
         speak(message)
         return jsonify({"ok": True, "message": message})
-
+    @app.route("/api/camera/latest")
+    def latest_camera_image():
+        return send_file("/home/walkingbuddy3/camera-tests/latest.jpg", mimetype="image/jpeg")
     @app.route("/video")
     def video():
         return Response(
             camera_service.generate_frames(),
             mimetype="multipart/x-mixed-replace; boundary=frame"
         )
+
+
+
     @app.route("/api/camera/capture", methods=["POST"])
     def capture_camera():
         output_file = "/home/walkingbuddy3/camera-tests/latest.jpg"

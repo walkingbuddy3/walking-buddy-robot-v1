@@ -48,6 +48,12 @@ async function captureCamera() {
 
     const data = await response.json();
     status.innerText = JSON.stringify(data);
+
+    const img = document.getElementById("latest-camera-image");
+    if (img) {
+        img.src = "/api/camera/latest?t=" + new Date().getTime();
+    }
 }
+
 
 
