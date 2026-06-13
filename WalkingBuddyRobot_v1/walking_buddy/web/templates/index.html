@@ -23,6 +23,7 @@
                 <button onclick="moveRobot('backward')">Backward</button>
             </div>
             <p id="status">Ready.</p>
+            <p><strong>Obstacle Status:</strong> <span id="obstacle-status">Not analyzed yet.</span></p>
         </section>
 
         <section class="card">
@@ -31,6 +32,7 @@
      src="/api/camera/latest"
      class="video"
      alt="Latest Walking Buddy camera capture">
+     <p><strong>Detected Objects:</strong> <span id="detected-objects">Not detected yet.</span></p>
         </section>
 
         <section class="card">

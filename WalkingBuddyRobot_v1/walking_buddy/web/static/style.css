@@ -65,3 +65,12 @@ button.emergency {
     font-weight: bold;
     font-size: 20px;
 }
+.safe {
+    color: green;
+    font-weight: bold;
+}
+
+.danger {
+    color: red;
+    font-weight: bold;
+}

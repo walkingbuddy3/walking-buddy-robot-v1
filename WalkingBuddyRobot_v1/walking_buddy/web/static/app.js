@@ -53,6 +53,30 @@ async function captureCamera() {
     if (img) {
         img.src = "/api/camera/latest?t=" + new Date().getTime();
     }
+
+    const analyzeResponse = await fetch("/api/camera/analyze");
+    const analyzeData = await analyzeResponse.json();
+
+    const obstacleStatus = document.getElementById("obstacle-status");
+    if (obstacleStatus) {
+        obstacleStatus.innerText = analyzeData.message + " | Brightness: " + analyzeData.brightness;
+        obstacleStatus.className = analyzeData.obstacle_possible ? "danger" : "safe";
+    }
+    const visionResponse = await fetch("/api/vision/detect");
+    const visionData = await visionResponse.json();
+
+    const detectedObjects = document.getElementById("detected-objects");
+    if (detectedObjects) {
+        if (visionData.detections && visionData.detections.length > 0) {
+            detectedObjects.innerText = visionData.detections
+                .map(item => item.label + " (" + Math.round(item.confidence * 100) + "%)")
+                .join(", ");
+        } else {
+            detectedObjects.innerText = "No known objects detected.";
+        }
+    }
+
+
 }
 
 

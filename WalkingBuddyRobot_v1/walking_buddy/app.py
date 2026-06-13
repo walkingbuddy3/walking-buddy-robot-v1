@@ -5,6 +5,9 @@ from walking_buddy.hardware.motors import MotorController
 from walking_buddy.services.camera import CameraService
 from walking_buddy.services.voice import speak
 from walking_buddy.services.obstacles import ObstacleService
+from walking_buddy.services.camera_analysis import CameraAnalysisService
+from walking_buddy.services.yolo_vision import YoloVisionService
+
 
 motor_controller = MotorController()
 camera_service = CameraService()
@@ -100,5 +103,14 @@ def create_app():
             "message": "Camera image captured",
             "file": output_file
         })
+    @app.route("/api/camera/analyze")
+    def analyze_camera():
+        return jsonify(CameraAnalysisService.analyze_latest())
+    @app.route("/api/vision/detect")
+    def vision_detect():
+        return jsonify(
+            YoloVisionService.analyze_image("/home/walkingbuddy3/camera-tests/latest.jpg")
+        )
+
     return app
 
