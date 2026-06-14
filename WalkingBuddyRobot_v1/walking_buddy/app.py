@@ -7,7 +7,7 @@ from walking_buddy.services.voice import speak
 from walking_buddy.services.obstacles import ObstacleService
 from walking_buddy.services.camera_analysis import CameraAnalysisService
 from walking_buddy.services.yolo_vision import YoloVisionService
-
+from walking_buddy.services.owner_identity import OwnerIdentityService
 
 motor_controller = MotorController()
 camera_service = CameraService()
@@ -111,6 +111,10 @@ def create_app():
         return jsonify(
             YoloVisionService.analyze_image("/home/walkingbuddy3/camera-tests/latest.jpg")
         )
+
+    @app.route("/api/owner/status")
+    def owner_status():
+        return jsonify(OwnerIdentityService.get_status())
 
     return app
 
