@@ -1,7 +1,25 @@
+
+let lastMovementAllowed = true;
+let lastRecommendation = "No AI safety decision yet.";
+
+
 async function moveRobot(command) {
     const status = document.getElementById("status");
     status.innerText = "Sending command: " + command;
+    if (command === "forward" && lastMovementAllowed === false) {
+    status.innerText = "Forward blocked by AI safety: " + lastRecommendation;
 
+    await fetch("/api/say", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            message: "Obstacle detected ahead. Forward movement blocked."
+        })
+    });
+
+    return;
+}
+    
     const response = await fetch("/api/move", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -64,17 +82,30 @@ async function captureCamera() {
     }
     const visionResponse = await fetch("/api/vision/detect");
     const visionData = await visionResponse.json();
+    lastMovementAllowed = visionData.movement_allowed;
+    lastRecommendation = visionData.recommendation;
+
 
     const detectedObjects = document.getElementById("detected-objects");
-    if (detectedObjects) {
-        if (visionData.detections && visionData.detections.length > 0) {
-            detectedObjects.innerText = visionData.detections
-                .map(item => item.label + " (" + Math.round(item.confidence * 100) + "%)")
-                .join(", ");
-        } else {
-            detectedObjects.innerText = "No known objects detected.";
-        }
+if (detectedObjects) {
+    if (visionData.detections && visionData.detections.length > 0) {
+        const objectText = visionData.detections
+            .map(item => item.label + " (" + Math.round(item.confidence * 100) + "%)")
+            .join(", ");
+
+        detectedObjects.innerText =
+            objectText +
+            "\nRisk Level: " + visionData.risk_level +
+            "\nRecommendation: " + visionData.recommendation +
+            "\nMovement Allowed: " + (visionData.movement_allowed ? "YES" : "NO");
+    } else {
+        detectedObjects.innerText =
+            "No known objects detected." +
+            "\nRisk Level: " + visionData.risk_level +
+            "\nRecommendation: " + visionData.recommendation +
+            "\nMovement Allowed: " + (visionData.movement_allowed ? "YES" : "NO");
     }
+}
 
 
 }
